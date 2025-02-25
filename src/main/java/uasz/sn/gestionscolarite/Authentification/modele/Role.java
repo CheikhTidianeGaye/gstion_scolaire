@@ -1,4 +1,5 @@
-package uasz.sn.gestionscolarite.Authentification.modele;
+package uasz.sn.Gestion_Enseignement.Authentification.modele;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -7,10 +8,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     private String role;
 }
-

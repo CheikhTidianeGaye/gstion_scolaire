@@ -1,12 +1,12 @@
-package uasz.sn.gestionscolarite.Authentification.service;
+package uasz.sn.Gestion_Enseignement.Authentification.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uasz.sn.gestionscolarite.Authentification.modele.Role;
-import uasz.sn.gestionscolarite.Authentification.modele.Utilisateur;
-import uasz.sn.gestionscolarite.Authentification.repository.RoleRepository;
-import uasz.sn.gestionscolarite.Authentification.repository.UtilisateurRepository;
+import uasz.sn.Gestion_Enseignement.Authentification.modele.Role;
+import uasz.sn.Gestion_Enseignement.Authentification.modele.Utilisateur;
+import uasz.sn.Gestion_Enseignement.Authentification.repository.RoleRepository;
+import uasz.sn.Gestion_Enseignement.Authentification.repository.UtilisateurRepository;
 
 @Service
 @Transactional

@@ -1,4 +1,4 @@
-package uasz.sn.gestionscolarite.Authentification.security;
+package uasz.sn.Gestion_Enseignement.Authentification.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +13,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] FOR_PERMANENT = {"/Eleve/**"};
-    private static final String[] FOR_VACATAIRE = {"/Enseignant/**"};
-    private static final String[] FOR_CHEFDEPARTEMENT = {"/Administrtion/**"};
+    private static final String[] FOR_PERMANENT = {"/Permanent/**"};
+    private static final String[] FOR_VACATAIRE = {"/Vacataire/**"};
+    private static final String[] FOR_CHEFDEPARTEMENT = {"/ChefDepartement/**"};
 
     @Bean
     public PasswordEncoder passwordEncoder() {
