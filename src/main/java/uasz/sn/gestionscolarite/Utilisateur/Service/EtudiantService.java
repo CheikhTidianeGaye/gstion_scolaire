@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.Utilisateur.Service;
+package uasz.sn.gestionscolarite.Utilisateur.Service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

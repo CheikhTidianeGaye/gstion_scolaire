@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.Utilisateur.Controller;
+package uasz.sn.gestionscolarite.Utilisateur.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

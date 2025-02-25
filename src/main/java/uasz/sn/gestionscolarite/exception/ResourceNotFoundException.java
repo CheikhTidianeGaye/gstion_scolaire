@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.exception;
+package uasz.sn.gestionscolarite.exception;
 
 
 

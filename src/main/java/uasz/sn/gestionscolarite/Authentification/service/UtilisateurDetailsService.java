@@ -1,11 +1,11 @@
-package uasz.sn.Gestion_Enseignement.Authentification.service;
+package uasz.sn.gestionscolarite.Authentification.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import uasz.sn.Gestion_Enseignement.Authentification.modele.Utilisateur;
-import uasz.sn.Gestion_Enseignement.Authentification.repository.UtilisateurRepository;
+import uasz.sn.gestionscolarite.Authentification.modele.Utilisateur;
+import uasz.sn.gestionscolarite.Authentification.repository.UtilisateurRepository;
 
 
 @Service

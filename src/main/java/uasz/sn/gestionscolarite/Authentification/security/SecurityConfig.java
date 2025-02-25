@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.Authentification.security;
+package uasz.sn.gestionscolarite.Authentification.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

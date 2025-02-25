@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.exception;
+package uasz.sn.gestionscolarite.exception;
 
 public class ResourceAlreadyExistException extends RuntimeException {
     public ResourceAlreadyExistException(String message){

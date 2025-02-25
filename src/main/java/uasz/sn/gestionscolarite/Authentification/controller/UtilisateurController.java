@@ -1,4 +1,4 @@
-package uasz.sn.Gestion_Enseignement.Authentification.controller;
+package uasz.sn.gestionscolarite.Authentification.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,8 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import uasz.sn.Gestion_Enseignement.Authentification.modele.Utilisateur;
-import uasz.sn.Gestion_Enseignement.Authentification.service.UtilisateurService;
+import uasz.sn.gestionscolarite.Authentification.modele.Utilisateur;
+import uasz.sn.gestionscolarite.Authentification.service.UtilisateurService;
 
 import java.security.Principal;
 
