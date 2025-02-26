@@ -1,12 +1,197 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr">
 <head>
-    <title>Accueil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Scolaire - Accueil</title>
+    <style>
+        /* Styles généraux */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* En-tête */
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Section Hero */
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #e6b800;
+        }
+
+        /* Section fonctionnalités */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .feature {
+            background-color: white;
+            padding: 20px;
+            margin: 15px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        /* Section Espace Public */
+        .public-space {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white;
+        }
+
+        .annonces {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .annonce {
+            background-color: #ffcc00;
+            padding: 15px;
+            margin: 10px;
+            width: 300px;
+            border-radius: 8px;
+        }
+
+        /* Pied de page */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-<h1>Bienvenue sur l'application de gestion scolaire</h1>
-<p>Ceci est la page d'accueil générale de l'application.</p>
-<a th:href="@{/auth/login}">Se connecter</a>
-<a th:href="@{/auth/register}">S'inscrire</a>
+<header>
+    <h1>Bienvenue sur la Plateforme de Gestion Scolaire</h1>
+    <nav>
+        <ul>
+            <li><a href="#">Accueil</a></li>
+            <li><a href="#">Classes</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="#">Absences</a></li>
+            <li><a href="#">Inscriptions</a></li>
+            <li><a href="#">Notes</a></li>
+            <li><a href="#">Espace Public</a></li>
+            <li><a href="login.html">Connexion</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <h2>Optimisez la gestion de votre établissement scolaire</h2>
+    <p>Une plateforme moderne pour gérer les élèves, enseignants et l’administration.</p>
+    <a href="inscription.html" class="btn">S'inscrire</a>
+</section>
+
+<section class="features">
+    <div class="feature">
+        <h3>Gestion des Classes</h3>
+        <p>Ajoutez et consultez les listes des élèves par classe.</p>
+    </div>
+    <div class="feature">
+        <h3>Notifications et Cours</h3>
+        <p>Recevez et envoyez des notifications importantes.</p>
+    </div>
+    <div class="feature">
+        <h3>Suivi des Absences</h3>
+        <p>Visualisez les absences de chaque élève en temps réel.</p>
+    </div>
+    <div class="feature">
+        <h3>Notes et Bulletins</h3>
+        <p>Saisie des notes et génération automatique des bulletins.</p>
+    </div>
+</section>
+
+<section class="public-space">
+    <h2>Espace Public</h2>
+    <p>Retrouvez ici les dernières annonces et informations importantes.</p>
+    <div class="annonces">
+        <div class="annonce">
+            <h4>Rentrée scolaire 2025</h4>
+            <p>La rentrée scolaire est prévue pour le 15 septembre 2025.</p>
+        </div>
+        <div class="annonce">
+            <h4>Inscriptions ouvertes</h4>
+            <p>Les inscriptions pour l'année scolaire sont maintenant ouvertes.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2025 Gestion Scolaire. Tous droits réservés.</p>
+</footer>
 </body>
 </html>
