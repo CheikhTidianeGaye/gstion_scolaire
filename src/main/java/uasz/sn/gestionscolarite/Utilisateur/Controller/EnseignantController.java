@@ -41,15 +41,9 @@ public class EnseignantController {
         return "template_enseignant";
     }
 
-    @RequestMapping(value = "/SuperAdministrateur/Accueil", method = RequestMethod.GET)
-    public String accueil_SuperAdministrateur(Model model, Principal principal) {
-        Utilisateur utilisateur = utilisateurService.rechercher_Utilisateur(principal.getName());
-        model.addAttribute("nom", utilisateur.getNom());
-        model.addAttribute("prenom", utilisateur.getPrenom().charAt(0));
-        return "template_SuperAdministrateur";
-    }
 
-    @RequestMapping(value = "/SuperAdministrateur/ajouterEnseignant", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/Administrateur/ajouterEnseignant", method = RequestMethod.POST)
     public String ajouter_Enseignant(Enseignant enseignant) {
         String password = passwordEncoder().encode("Passer123");
         enseignant.setPassword(password);
@@ -62,32 +56,31 @@ public class EnseignantController {
 
         enseignantService.ajouter(enseignant);
 
-        return "redirect:/SuperAdministrateur/Administrateur";
+        return "redirect:/Administrateur/Enseignant";
     }
 
-    @RequestMapping(value = "/SuperAdministrateur/modifierEnseignant", method = RequestMethod.POST)
+    @RequestMapping(value = "/Administrateur/modifierEnseignant", method = RequestMethod.POST)
     public String modifier_Enseignant(Enseignant enseignant) {
         Enseignant ens_modif = enseignantService.rechercherParId(enseignant.getId());
         ens_modif.setMatricule(enseignant.getMatricule());
         ens_modif.setNom(enseignant.getNom());
         ens_modif.setPrenom(enseignant.getPrenom());
         ens_modif.setSpecialite(enseignant.getSpecialite());
-        ens_modif.setMatricule(enseignant.getMatricule());
 
         enseignantService.modifier(ens_modif);
 
-        return "redirect:/SuperAdministrateur/Administrateur";
+        return "redirect:/Administrateur/Enseignant";
     }
 
-    @RequestMapping(value = "/SuperAdministrateur/activerEnseignant", method = RequestMethod.POST)
+    @RequestMapping(value = "/Administrateur/activerEnseignant", method = RequestMethod.POST)
     public String activer_Enseignant(Long id) {
-        enseignantService.activer(id);
-        return "redirect:/SuperAdministrateur/Administrateur";
+        enseignantService.active(id);
+        return "redirect:/Administrateur/Enseignant";
     }
 
     @RequestMapping(value = "/SuperAdministrateur/archiverEnseignant", method = RequestMethod.POST)
     public String archiver_Enseignant(Long id) {
-        enseignantService.archiver(id);
-        return "redirect:/SuperAdministrateur/Administrateur";
+        enseignantService.archive(id);
+        return "redirect:/Administrateur/Enseignant";
     }
 }

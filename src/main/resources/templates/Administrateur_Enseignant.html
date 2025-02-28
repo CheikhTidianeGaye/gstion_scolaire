@@ -1,10 +1,383 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <!-- Les liens CSS : on peut se fier à th:href -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css"/>
+    <link rel="stylesheet" th:href="@{/css/buttons.dataTables.min.css}" href="../static/css/buttons.dataTables.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery.dataTables.min.css}" href="../static/css/jquery.dataTables.min.css"/>
+
+    <!-- Les scripts JS -->
+    <script th:src="@{/js/jquery-3.7.0.js}" src="../static/js/jquery-3.7.0.js"></script>
+    <script th:src="@{/js/bootstrap.js}" src="../static/js/bootstrap.js"></script>
+    <script th:src="@{/js/dataTables.buttons.min.js}" src="../static/js/dataTables.buttons.min.js"></script>
+    <script th:src="@{/js/jquery.dataTables.min.js}" src="../static/js/jquery.dataTables.min.js"></script>
+
+    <title>Administrateur</title>
 </head>
 <body>
-$END$
+
+<div layout:fragment="custom-content" class="container">
+    <br/>
+    <h3 style="text-align: center">La liste des Enseignants</h3>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab_Enseignant">La liste des Enseignants</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="tab_Enseignant" class="tab-pane fade in active">
+
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Enseignant">Ajouter Enseignant</button>
+                </div>
+            </div>
+
+            <!-- Début popup Ajouter un Enseignant -->
+            <div data-dismiss="modal" style="margin-top:25px">
+                <div class="modal fade" id="form_Ajouter_Enseignant">
+                    <div class="modal-dialog">
+                        <div class="modal-content panel-success">
+                            <!-- Modal Header -->
+                            <div class="modal-header panel-heading">
+                                <button type="button" class="close" data-dismiss="modal">x</button>
+                                <h4 class="modal-title" style="text-align: center">Ajouter un Permanent</h4>
+                            </div>
+                            <!-- Modal Body -->
+                            <form th:action="@{/Administrateur/ajouterEnseignant}" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Matricule</label>
+                                        <input type="text" class="form-control" name="matricule" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nom</label>
+                                        <input type="text" class="form-control" name="nom" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Prenom(s)</label>
+                                        <input type="text" class="form-control" name="prenom"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Specialite</label>
+                                        <input type="text" class="form-control" name="specialite"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Login</label>
+                                        <input type="text" class="form-control" name="username"/>
+                                    </div>
+                                </div>
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                            <button type="submit" class="btn btn-success">Ajouter</button>
+                                        </div>
+                                        <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin popup Ajouter un Enseignant -->
+
+            <!-- Début liste des Permanents -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Enseignant">
+                    <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom</th>
+                        <th>Prenom(s)</th>
+                        <th>Specialite</th>
+                        <th>Login</th>
+                        <th>Opérations</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="enseignant : ${enseignants}">
+                        <td th:text="${enseignant.matricule}"></td>
+                        <td th:text="${enseignant.nom}"></td>
+                        <td th:text="${enseignant.prenom}"></td>
+                        <td th:text="${enseignant.specialite}"></td>
+                        <td th:text="${enseignant.username}"></td>
+                        <td>
+                            <button class="btn btn-info btn-xs" data-toggle="modal" th:data-target="|#form_Modifier_Enseignant${enseignant.id}|">
+                                Modifier
+                            </button>
+                            <button th:if="${enseignant.isActive()} == false" class="btn btn-success btn-xs" data-toggle="modal" th:data-target="|#form_Activer_Enseignant${enseignant.id}|">
+                                Activer
+                            </button>
+                            <button th:if="${enseignant.isActive()} == true" class="btn btn-danger btn-xs" data-toggle="modal" th:data-target="|#form_Activer_Enseignant${enseignant.id}|">
+                                Désactiver
+                            </button>
+                            <button th:if="${enseignant.archive == false}" class="btn btn-warning btn-xs" data-toggle="modal" th:data-target="|#form_Archiver_Enseignant${enseignant.id}|">
+                                Archiver
+                            </button>
+                            <button th:if="${enseignant.archive == true}" class="btn btn-primary btn-xs" data-toggle="modal" th:data-target="|#form_Archiver_Enseignant${enseignant.id}|">
+                                Désarchiver
+                            </button>
+                        </td>
+
+                        <!-- Début popup Modifier un Enseignant -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:id="|form_Modifier_Enseignant${enseignant.id}|">
+                                <div class="modal-dialog">
+                                    <div class="modal-content panel-info">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header panel-heading">
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Modifier Permanent</h4>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <form th:action="@{/Administrateur/modifierEnseignant}" method="post">
+                                            <div class="modal-body">
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${enseignant.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Matricule</label>
+                                                    <input type="text" class="form-control" name="matricule" th:value="${enseignant.matricule}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nom</label>
+                                                    <input type="text" class="form-control" name="nom" th:value="${enseignant.nom}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Prenom(s)</label>
+                                                    <input type="text" class="form-control" name="prenom" th:value="${enseignant.prenom}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Specialite</label>
+                                                    <input type="text" class="form-control" name="specialite" th:value="${enseignant.specialite}"/>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-info">Modifier</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup Modifier un Enseignant -->
+
+                        <!-- Début popup Activer un Enseignant -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:id="|form_Activer_Enseignant${enseignant.id}|">
+                                <div class="modal-dialog">
+                                    <div th:if="${enseignant.isActive()} == false" class="modal-content panel-success">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header panel-heading">
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Activer Enseignant</h4>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <form th:action="@{/Administrateur/activerEnseignant}" method="post">
+                                            <div class="modal-body">
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${enseignant.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Matricule</label> :
+                                                    <span th:text="${enseignant.matricule}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nom</label> :
+                                                    <span th:text="${enseignant.nom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Prenom(s)</label> :
+                                                    <span th:text="${enseignant.prenom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Specialite</label> :
+                                                    <span th:text="${enseignant.specialite}"></span>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-success">Activer</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div th:if="${enseignant.isActive()} == true" class="modal-content panel-danger">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header panel-heading">
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Désactiver Enseignant</h4>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <form th:action="@{/Administrateur/activerEnseignant}" method="post">
+                                            <div class="modal-body">
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${enseignant.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Matricule</label> :
+                                                    <span th:text="${enseignant.matricule}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nom</label> :
+                                                    <span th:text="${enseignant.nom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Prenom(s)</label> :
+                                                    <span th:text="${enseignant.prenom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Specialite</label> :
+                                                    <span th:text="${enseignant.specialite}"></span>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-danger">Désactiver</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup Activer un Enseignant -->
+
+                        <!-- Début popup Archiver un Enseignant -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:id="|form_Archiver_Enseignant${enseignant.id}|">
+                                <div class="modal-dialog">
+                                    <div th:if="${enseignant.archive == false}" class="modal-content panel-warning">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header panel-heading">
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Archiver Enseignant</h4>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <form th:action="@{/Administrateur/archiverEnseignant}" method="post">
+                                            <div class="modal-body">
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${enseignant.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Matricule</label> :
+                                                    <span th:text="${enseignant.matricule}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nom</label> :
+                                                    <span th:text="${enseignant.nom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Prenom(s)</label> :
+                                                    <span th:text="${enseignant.prenom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Specialite</label> :
+                                                    <span th:text="${enseignant.specialite}"></span>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-warning">Archiver</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div th:if="${enseignant.archive == true}" class="modal-content panel-primary">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header panel-heading">
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Désarchiver Enseignant</h4>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <form th:action="@{/Administrateur/archiverEnseignant}" method="post">
+                                            <div class="modal-body">
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${enseignant.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Matricule</label> :
+                                                    <span th:text="${enseignant.matricule}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nom</label> :
+                                                    <span th:text="${enseignant.nom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Prenom(s)</label> :
+                                                    <span th:text="${enseignant.prenom}"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Specialite</label> :
+                                                    <span th:text="${enseignant.specialite}"></span>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-primary">Désarchiver</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup Archiver un Enseignant -->
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Début script DataTable -->
+            <script>
+                $(document).ready(function() {
+                    $("#table_Enseignant").DataTable();
+                });
+            </script>
+
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

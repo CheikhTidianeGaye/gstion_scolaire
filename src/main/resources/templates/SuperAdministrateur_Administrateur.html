@@ -1,10 +1,333 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <link  rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link  rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link  rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <title>Super Administrateur</title>
 </head>
 <body>
-$END$
+<div layout:fragment="custom-content" class="container">
+    <br/>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab_Eleve">Liste des Élèves</a></li>
+        <li><a data-toggle="tab" href="#tab_Enseignant">Liste des Enseignants</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="tab_Eleve" class="tab-pane fade in active">
+            <div class="row" style="padding: 10px 0; text-align: center;">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Eleve">Ajouter Élève</button>
+            </div>
+            <!-- Formulaire Ajouter Élève -->
+            <div class="modal fade" id="form_Ajouter_Eleve">
+                <div class="modal-dialog">
+                    <div class="modal-content panel-success">
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title text-center">Ajouter un Élève</h4>
+                        </div>
+                        <form th:action="@{/SuperAdministrateur/ajouterEleve}" method="post">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input type="text" class="form-control" name="nom" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Prénom(s)</label>
+                                    <input type="text" class="form-control" name="prenom" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Matricule</label>
+                                    <input type="text" class="form-control" name="matricule" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date de Naissance</label>
+                                    <input type="date" class="form-control" name="dateNaissance" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Login</label>
+                                    <input type="text" class="form-control" name="username" required/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Ajouter</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Tableau des élèves -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Eleve">
+                    <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom</th>
+                        <th>Prénom(s)</th>
+                        <th>Date de Naissance</th>
+                        <th>Login</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="eleve : ${eleves}">
+                        <td th:text="${eleve.matricule}"></td>
+                        <td th:text="${eleve.nom}"></td>
+                        <td th:text="${eleve.prenom}"></td>
+                        <td th:text="${eleve.dateNaissance}"></td>
+                        <td th:text="${eleve.username}"></td>
+                        <td>
+                            <button class="btn btn-info btn-xs" data-toggle="modal" th:attr="data-target='#form_Modifier_Eleve'+${eleve.id}">Modifier</button>
+                            <button class="btn btn-success btn-xs" data-toggle="modal" th:if="${!eleve.active}" th:attr="data-target='#form_Activer_Eleve'+${eleve.id}">Activer</button>
+                            <button class="btn btn-danger btn-xs" data-toggle="modal" th:if="${eleve.active}" th:attr="data-target='#form_Activer_Eleve'+${eleve.id}">Désactiver</button>
+                            <button class="btn btn-warning btn-xs" data-toggle="modal" th:if="${!eleve.archive}" th:attr="data-target='#form_Archiver_Eleve'+${eleve.id}">Archiver</button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" th:if="${eleve.archive}" th:attr="data-target='#form_Archiver_Eleve'+${eleve.id}">Désarchiver</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+                <!-- Popup Modifier Élève -->
+            <div class="modal fade" id="form_Modifier_Eleve" th:each="eleve : ${eleves}" th:attr="id='form_Modifier_Eleve'+${eleve.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Modifier Élève</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/SuperAdministrateur/modifierEleve}" method="post">
+                                <input type="hidden" name="id" th:value="${eleve.id}">
+                                <input type="text" name="nom" th:value="${eleve.nom}" class="form-control" required>
+                                <input type="text" name="prenom" th:value="${eleve.prenom}" class="form-control" required>
+                                <input type="text" name="matricule" th:value="${eleve.matricule}" class="form-control" required>
+                                <input type="date" name="dateNaissance" th:value="${eleve.dateNaissance}" class="form-control" required>
+                                <button type="submit" class="btn btn-info">Modifier</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup Activer/Désactiver Élève -->
+            <div class="modal fade" th:each="eleve : ${eleves}" th:attr="id='form_Activer_Eleve'+${eleve.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirmation</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p th:text="${eleve.isActive()} ? 'Voulez-vous désactiver cet élève ?' : 'Voulez-vous activer cet élève ?'"></p>
+                            <form th:action="@{/SuperAdministrateur/activerEleve}" method="post">
+                                <input type="hidden" name="id" th:value="${eleve.id}">
+                                <button type="submit" class="btn btn-warning">Confirmer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup Archiver/Désarchiver Élève -->
+            <div class="modal fade" th:each="eleve : ${eleves}" th:attr="id='form_Archiver_Eleve'+${eleve.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirmation</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p th:text="${eleve.isArchive()} ? 'Voulez-vous désarchiver cet élève ?' : 'Voulez-vous archiver cet élève ?'"></p>
+                            <form th:action="@{/SuperAdministrateur/archiverEleve}" method="post">
+                                <input type="hidden" name="id" th:value="${eleve.id}">
+                                <button type="submit" class="btn btn-danger">Confirmer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tab_Enseignant" class="tab-pane fade">
+    <div class="row" style="padding: 10px 0; text-align: center;">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Enseignant">Ajouter Enseignant</button>
+    </div>
+    <!-- Formulaire Ajouter Enseignant -->
+    <div class="modal fade" id="form_Ajouter_Enseignant">
+        <div class="modal-dialog">
+            <div class="modal-content panel-success">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center">Ajouter un Enseignant</h4>
+                </div>
+                <form th:action="@{/SuperAdministrateur/ajouterEnseignant}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" class="form-control" name="nom" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom(s)</label>
+                            <input type="text" class="form-control" name="prenom" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Numéro de matricule</label>
+                            <input type="text" class="form-control" name="matricule" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Login</label>
+                            <input type="text" class="form-control" name="username" required/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Tableau des enseignants -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="table_Enseignant">
+            <thead>
+            <tr>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom(s)</th>
+                <th>Login</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="enseignant : ${enseignants}">
+                <td th:text="${enseignant.matricule}"></td>
+                <td th:text="${enseignant.nom}"></td>
+                <td th:text="${enseignant.prenom}"></td>
+                <td th:text="${enseignant.username}"></td>
+                <td>
+                    <button class="btn btn-info btn-xs" data-toggle="modal" th:attr="data-target='#form_Modifier_Enseignant'+${enseignant.id}">Modifier</button>
+                    <button class="btn btn-success btn-xs" data-toggle="modal" th:if="${!enseignant.active}" th:attr="data-target='#form_Activer_Enseignant'+${enseignant.id}">Activer</button>
+                    <button class="btn btn-danger btn-xs" data-toggle="modal" th:if="${enseignant.active}" th:attr="data-target='#form_Activer_Enseignant'+${enseignant.id}">Désactiver</button>
+                    <button class="btn btn-warning btn-xs" data-toggle="modal" th:if="${!enseignant.archive}" th:attr="data-target='#form_Archiver_Enseignant'+${enseignant.id}">Archiver</button>
+                    <button class="btn btn-primary btn-xs" data-toggle="modal" th:if="${enseignant.archive}" th:attr="data-target='#form_Archiver_Enseignant'+${enseignant.id}">Désarchiver</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Popup Modifier Enseignant -->
+    <div class="modal fade" th:each="enseignant : ${enseignants}" th:attr="id='form_Modifier_Enseignant'+${enseignant.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifier Enseignant</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/SuperAdministrateur/modifierEnseignant}" method="post">
+                        <input type="hidden" name="id" th:value="${enseignant.id}">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" name="nom" th:value="${enseignant.nom}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom(s)</label>
+                            <input type="text" name="prenom" th:value="${enseignant.prenom}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Matricule</label>
+                            <input type="text" name="matricule" th:value="${enseignant.matricule}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Spécialité</label>
+                            <input type="text" name="specialite" th:value="${enseignant.specialite}" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-info">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Supprimer Enseignant -->
+    <div class="modal fade" th:each="enseignant : ${enseignants}" th:attr="id='form_Supprimer_Enseignant'+${enseignant.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous vraiment supprimer cet enseignant ?</p>
+                    <form th:action="@{/SuperAdministrateur/supprimerEnseignant}" method="post">
+                        <input type="hidden" name="id" th:value="${enseignant.id}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Archiver Enseignant -->
+    <div class="modal fade" th:each="enseignant : ${enseignants}" th:attr="id='form_Archiver_Enseignant'+${enseignant.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous archiver cet enseignant ?</p>
+                    <form th:action="@{/SuperAdministrateur/archiverEnseignant}" method="post">
+                        <input type="hidden" name="id" th:value="${enseignant.id}">
+                        <button type="submit" class="btn btn-warning">Confirmer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Désarchiver Enseignant -->
+    <div class="modal fade" th:each="enseignant : ${enseignants}" th:attr="id='form_Desarchiver_Enseignant'+${enseignant.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous désarchiver cet enseignant ?</p>
+                    <form th:action="@{/SuperAdministrateur/desarchiverEnseignant}" method="post">
+                        <input type="hidden" name="id" th:value="${enseignant.id}">
+                        <button type="submit" class="btn btn-primary">Confirmer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    $(document).ready(function() {
+        $("#table_Enseignant").DataTable();
+    });
+</script>
+</div>
+
+
 </body>
 </html>

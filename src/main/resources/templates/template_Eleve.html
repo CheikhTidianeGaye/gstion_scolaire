@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <link  rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+  <link  rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+  <link  rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+  <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+  <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+  <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+  <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+  <title>Accueil Élève</title>
+
 </head>
 <body>
-$END$
+
+<header>
+  <h1>Bienvenue, <span th:text="${nom}"></span> <span th:text="${prenom}"></span>.</h1>
+  <nav>
+    <ul>
+      <li><a href="/Eleve/Accueil">Accueil</a></li>
+      <li><a href="/Eleve/Profil">Mon Profil</a></li>
+      <li><a href="/Eleve/Cours">Mes Cours</a></li>
+      <li><a href="/Eleve/Notes">Mes Notes</a></li>
+      <li><a href="/logout">Déconnexion</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h2>Tableau de bord</h2>
+  <p>Bienvenue sur votre espace élève. Vous pouvez consulter vos cours, vos notes et votre profil.</p>
+
+  <section>
+    <h3>Derniers cours</h3>
+    <ul>
+      <li th:each="cours : ${coursList}">
+        <a th:href="@{/Eleve/Cours/{id}(id=${cours.id})}" th:text="${cours.nom}"></a>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Dernières notes</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Matière</th>
+        <th>Note</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="note : ${notesList}">
+        <td th:text="${note.matiere}"></td>
+        <td th:text="${note.valeur}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+
 </body>
 </html>

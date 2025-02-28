@@ -23,31 +23,28 @@ public class UtilisateurController {
     }
 
     @RequestMapping("/")
-    public  String login(Principal principal){
+    public String login(Principal principal){
         String url = "login";
         Utilisateur utilisateur = utilisateurService.rechercher_Utilisateur(principal.getName());
-        if (utilisateur.getRoles().get(0).getRole().equals("Permanent")){
-            url = "redirect:/Permanent/Accueil ";
-        } else if (utilisateur.getRoles().get(0).getRole().equals("Vacataire")) {
-            url = "redirect:/Vacataire/Accueil ";
-        } else if (utilisateur.getRoles().get(0).getRole().equals("ChefDepartement")) {
-            url = "redirect:/ChefDepartement/Accueil ";
-        } else if (utilisateur.getRoles().get(0).getRole().equals("Etudiant")) {
-            url = "redirect:/Etudiant/Accueil ";
-        }else if (utilisateur.getRoles().get(0).getRole().equals("ResponsableClasse")) {
-            url = "redirect:/ResponsableClasse/Accueil ";
+        System.out.println("Utilisateur : " + utilisateur.getUsername() + " - Rôle : " + utilisateur.getRoles().get(0).getRole());
+
+        if (utilisateur.getRoles().get(0).getRole().equals("Eleve")) {
+            url = "redirect:/Eleve/Accueil";
+        } else if (utilisateur.getRoles().get(0).getRole().equals("Enseignant")) {
+            url = "redirect:/Enseignant/Accueil";
+        } else if (utilisateur.getRoles().get(0).getRole().equals("Administrateur")) {
+            url = "redirect:/Administrateur/Accueil";
         }
         return url;
     }
 
-        @RequestMapping(value = "/logout")
+    @RequestMapping(value = "/logout")
     public String logOutAndRedirectToLoginPage(Authentication authentication,
                                                HttpServletRequest request,
-                                               HttpServletResponse response){
-        if (authentication != null ){
+                                               HttpServletResponse response) {
+        if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
         return "redirect:/login?logout=true";
     }
-
 }
